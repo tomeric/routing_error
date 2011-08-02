@@ -8,7 +8,8 @@ module Vidibus
       def call(env)
         response = @app.call(env)
         if response[0] == 404
-          env["vidibus-routing_error.request_uri"] = env["REQUEST_URI"]
+          request = ::Rack::Request.new(env)
+          env["vidibus-routing_error.request_uri"] = request.fullpath
           env["PATH_INFO"] = env["REQUEST_URI"] = "/routing_error"
           @app.call(env)
         else
